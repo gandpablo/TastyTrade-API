@@ -6,6 +6,22 @@ This project was created to simplify the process of developing **algorithmic tra
 
 This library consolidates the most common interactions into a single, lightweight Python package — including **authentication**, **historical data**, **real-time market feeds**, **order execution**, and queries for **positions** and **transactions** — providing a simpler entry point to **automated trading** and **market analysis** in Python with Tastytrade.  
 
+## Table of Contents
+
+- [First Steps](#first-stepts)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Enabling API Access](#enabling-api-access)
+  - [Session vs. Trading Account](#session-vs-trading-account)
+- [Project Structure](#project-structure)
+- [Features & Examples](#features--examples)
+  - [1. Login (Session)](#1-login-session)
+  - [2. Account Info](#2-account-info)
+  - [3. Positions & Transactions](#3-positions--transactions)
+  - [4. Orders](#4-orders)
+  - [5. Real-Time Market Data](#5-real-time-market-data)
+  - [6. Historical Data](#6-historical-data)
+
 ## First Stepts
 
 ### Installation
@@ -77,9 +93,32 @@ tt = TastyTradeAPI()
 client = tt.Client(USER,PASS)
 ```
 
-### 2. Account Information
+### 2. Account Info
 
-You can query account details such as **balances**, **positions**, and **transactions** — and many other useful data points that are fully documented in the example notebooks.  
+You can query **general client data** and **financial metrics** in a single place: profile info, account metadata, balances, buying power, liquidity, **total fees**, and whether the account is **active**.
+
+Some available methods include:
+
+- `client_info(client)` → general profile data (name, email, account IDs)  
+- `balance(client)` → account balance  
+- `equity_BP(client)` → equity buying power  
+- `derivative_BP(client)` → derivative buying power  
+- `liquidity(client)` → available liquidity  
+- `total_fees(client)` → accumulated **commissions/fees** for the period
+- `still_connected(client)` → checks if the **API session is still alive**
+
+**Example:**
+```python
+info    = tt.client_info(client)
+balance = tt.balance(client)
+
+print("Client:", info)
+print("Balance:", balance)
+```
+
+### 3. Positions & Transactions
+
+You can also query your **open positions** and **past transactions** — either retrieving **all records** at once or filtering them for a **specific ticker**.  
 
 Here is an example with the positions retrieving all of them (only one opened with AAPL):
 
@@ -105,8 +144,45 @@ print(positions)
   ]
 }
 ```
+---
 
-### 3.
+Example retrieving all the account transactions:
+
+```python
+transactions = tt.all_transactions(client)
+
+print(transactions)
+```
+
+> **Expected output**
+
+```json
+{
+  "AAPL": [
+    {
+      "id": "TX001",
+      "transaction_type": "Buy",
+      "description": "Buy to Open",
+      "quantity": 100,
+      "price": 150.00,
+      "value": 15000.00,
+      "date": "2025-09-10 14:30:00"
+    }
+  ],
+  "TSLA": [
+    {
+      "id": "TX002",
+      "transaction_type": "Sell",
+      "description": "Sell to Close",
+      "quantity": 50,
+      "price": 240.00,
+      "value": 12000.00,
+      "date": "2025-09-12 10:05:00"
+    }
+  ]
+}
+```
+
 
 ### 4. Orders
 
