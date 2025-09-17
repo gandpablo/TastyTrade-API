@@ -35,7 +35,7 @@ You must also activate the **Open API Access** in your Tastytrade account before
 3. Click **`Request Opt-In`** and accept the Terms & Conditions.  
 4. Once enabled, your account will display **You are currently opted in**.
 
-![Step 1](./images/api_optout.png)
+>[Enable API](./images/api_optout.png)
 
 ---
 
@@ -79,7 +79,8 @@ client = tt.Client(USER,PASS)
 
 ### 2. Account Information
 
-You can query account details such as **balances**, **positions**, and **transactions**.  
+You can query account details such as **balances**, **positions**, and **transactions** — and many other useful data points that are fully documented in the example notebooks.  
+
 Here is an example with the positions retrieving all of them (only one opened with AAPL):
 
 ```python
@@ -105,7 +106,9 @@ print(positions)
 }
 ```
 
-### 3. Orders
+### 3.
+
+### 4. Orders
 
 The API allows you to send trading orders. In the example notebooks this is **fully documented**, but the main parameters are:
 
@@ -145,9 +148,9 @@ print(order_result)
 }
 ```
 
-### 4. Real-Time Market Data
+### 5. Real-Time Market Data
 
-> Demo_: ![Realtime Demo](./images/realtime_demo.gif)  
+>[Realtime Demo](./images/realtime_demo.gif)  
 
 `RealTimeStreamer` opens a **persistent `WebSocket` connection** (DXFeed via Tastytrade) and runs on a **background thread**. You **poll** the latest snapshot from `stream.data` inside your own loop.  
 - **What you get:** a `dict` with the latest **`askPrice`** per symbol, e.g. `{"AAPL": 238.00, "MSFT": 510.05}`.  
@@ -161,9 +164,10 @@ print(order_result)
 
 **The data variable is the core element you will work with.**
 
-## 5. Historical Data
+## 6. Historical Data
 
 Fetch **historical candles** from DXFeed (via Tastytrade) as tidy `pandas` DataFrames.  
+
 ⚠️ It can take **several seconds** (even >1 minute for many symbols) due to the DXFeed handshake and the volume of requested data.
 
 **Parameters**
@@ -188,7 +192,10 @@ historical = tt.get_historical(client, tickers, interval, vars, max_data)
 ```
 
 >**The output is a dict mapping each ticker to its DataFrame with the selected variables.**
->![Example](./images/historical)
+>[Example](./images/historical.png)
+
+
+
 
 
 
