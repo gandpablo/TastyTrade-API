@@ -71,33 +71,106 @@ To start, you need your Tastytrade `USER` and `PASS` (email and password).
 Once logged in, a **session** is created and you can use the API functions:
 
 ```python
-from tastytrade.api import TastyTradeAPI
+from TastyTradeAPI.api import TastyTradeAPI
 
-client = TastyTradeAPI(USER, PASS)
+tt = TastyTradeAPI()
+client = tt.Client(USER,PASS)
 ```
 
 ### 2. Account Information
 
 You can query account details such as **balances**, **positions**, and **transactions**.  
-Here is an example with the positions retrieving all of them (opened):
+Here is an example with the positions retrieving all of them (only one opened with AAPL):
 
 ```python
-positions = client.all_positions()
+positions = tt.all_positions(client)
+
 print(positions)
 ```
-> Responde example
+> **Expected output**
 
 ```json
-[
-  {
-    "symbol": "AAPL",
-    "quantity": 10,
-    "averagePrice": 175.20,
-    "marketPrice": 178.40,
-    "unrealizedProfit": 32.0
-  }
-]
-´´´
+{
+  "AAPL": [
+    {
+      "id": "TX001",
+      "transaction_type": "Buy",
+      "description": "Buy to Open",
+      "quantity": 100,
+      "price": 150.00,
+      "value": 15000.00,
+      "date": "2025-09-10 14:30:00"
+    }
+  ]
+}
+```
+
+### 3. Orders
+
+The API allows you to send trading orders. In the example notebooks this is **fully documented**, but the main parameters are:
+
+- `ticker` → symbol (e.g., `"AAPL"`)  
+- `val` → number of shares/contracts  
+- `order_type` → `"Long"` or `"Short"`  
+- `action` → `"Start"` (open) or `"End"` (close)  
+- `time_force` → `"Day"`, `"GTC"`, `"GTD"`, `"Ext"`  
+- `otype` → `"Market"`,`"Limit"`,`"Stop"`,`"Stop Limit"` 
+
+**Example order:**
+
+```python
+order_result = client.order(
+    ticker="AAPL",
+    val=10,
+    order_type="Long",
+    action="Start",
+    time_force="Day",
+    otype="Market"
+)
+
+print(order_result)
+```
+
+> **Expected output**
+
+```json
+{
+  "Status": "Filled",
+  "Size": 10,
+  "Fees": 1.25,
+  "Commission": 0.50,
+  "NewBuyingPower": 9850.00,
+  "ReceivedAt": "2025-09-17 14:35:00"
+}
+```
+
+### 4. Real-Time Market Data
+
+> Demo_: ![Realtime Demo](./images/realtime_demo.gif)  
+
+`RealTimeStreamer` opens a **persistent `WebSocket` connection** (DXFeed via Tastytrade) and runs on a **background thread**. You **poll** the latest snapshot from `stream.data` inside your own loop.  
+- **What you get:** a `dict` with the latest **`askPrice`** per symbol, e.g. `{"AAPL": 238.00, "MSFT": 510.05}`.  
+- **Open connection:** messages are continuous; some may be **diffuse/incomplete**, connections can **take time to open/close**, and **not all symbols update at the same time** (some can arrive slightly **delayed** vs others).  
+- **Usage pattern:** start the stream, **loop** to read `stream.data`, and **stop** the stream when done.
+
+**Parameters**
+- `client` → authenticated session (created at login).  
+- `tickers` → list of symbols to subscribe (e.g., `["AAPL","TSLA"]`).  
+- `verbose` → `bool` (optional) for minimal console logging.
+
+This data variable is the core element you will work with.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
