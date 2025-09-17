@@ -119,7 +119,8 @@ The API allows you to send trading orders. In the example notebooks this is **fu
 **Example order:**
 
 ```python
-order_result = client.order(
+order_result = tt.order(
+    Client = client,
     ticker="AAPL",
     val=10,
     order_type="Long",
@@ -156,9 +157,44 @@ print(order_result)
 **Parameters**
 - `client` → authenticated session (created at login).  
 - `tickers` → list of symbols to subscribe (e.g., `["AAPL","TSLA"]`).  
-- `verbose` → `bool` (optional) for minimal console logging.
+- `verbose` → `bool` (optional) for console logging.
 
-This data variable is the core element you will work with.
+**The data variable is the core element you will work with.**
+
+## 5. Historical Data
+
+Fetch **historical candles** from DXFeed (via Tastytrade) as tidy `pandas` DataFrames.  
+⚠️ It can take **several seconds** (even >1 minute for many symbols) due to the DXFeed handshake and the volume of requested data.
+
+**Parameters**
+- `tickers`: symbols to fetch, e.g. `["AAPL","TSLA"]`.
+- `interval`: candle size with unit:  
+  - minutes: `m` (e.g., `"1m"`, `"5m"`)  
+  - hours: `h` (e.g., `"1h"`)  
+  - days: `d`, weeks: `w`, months: `mo`
+    
+- `vars`: the variables to obtain --> `["open","high","low","close","volume"]`.
+- `max_data` → max number of data to request per symbol.  
+  - There’s a helper (`values_from_data`) to **compute `max_data` automatically** for a target date range.
+
+**Example**
+```python
+tickers  = ["AAPL", "TSLA"]
+interval = "5m"
+max_data = 50
+vars     = ["open", "close", "volume"]
+
+historical = tt.get_historical(client, tickers, interval, vars, max_data)
+```
+
+>**The output is a dict mapping each ticker to its DataFrame with the selected variables.**
+>![Example](./images/historical)
+
+
+
+
+
+
 
 
 
