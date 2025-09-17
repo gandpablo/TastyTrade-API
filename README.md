@@ -1,10 +1,13 @@
 # TastyTrade-API
 
+
 ## Simplifying Tastytrade & DXFeed integration in Python  
 
 This project was created to simplify the process of developing **algorithmic trading software in Python** using the [Tastytrade broker](https://developer.tastytrade.com). While Tastytrade already provides an API, it is based on `REST` requests and `WebSocket` connections, which can be difficult to integrate directly into Python workflows. In particular, the **DXFeed workflow for data streaming** requires a complex `WebSocket` setup that is not for beginners.  
 
 This library consolidates the most common interactions into a single, lightweight Python package — including **authentication**, **historical data**, **real-time market feeds**, **order execution**, and queries for **positions** and **transactions** — providing a simpler entry point to **automated trading** and **market analysis** in Python with Tastytrade.  
+
+<br>
 
 ## Table of Contents
 
@@ -21,6 +24,9 @@ This library consolidates the most common interactions into a single, lightweigh
   - [4. Orders](#4-orders)
   - [5. Real-Time Market Data](#5-real-time-market-data)
   - [6. Historical Data](#6-historical-data)
+
+<br>
+
 
 ## First Stepts
 
@@ -51,7 +57,7 @@ You must also activate the **Open API Access** in your Tastytrade account before
 3. Click **`Request Opt-In`** and accept the Terms & Conditions.  
 4. Once enabled, your account will display **You are currently opted in**.
 
->[Enable API](./images/api_optout.png)
+![Enable API](./images/api_optout.png)
 
 ---
 
@@ -67,14 +73,17 @@ Activating the API creates a **session**, not a full **trading account**: a sess
 TastyTradeAPI/
 │
 ├── tastytrade/
-│   ├── **init**.py
-│   └── api.py                 # Main file: contains the TastyTradeAPI class and core methods
+│ ├── init.py
+│ └── api.py             # Main file: contains the TastyTradeAPI class and core methods
 │
 ├── examples/
-│   ├── example\_en.ipynb      # Jupyter Notebook in English – step-by-step usage examples
-│   └── example\_es.ipynb      # Jupyter Notebook in Spanish – same examples, fully documented
+│ ├── example_en.ipynb   # Jupyter Notebook in English – step-by-step usage examples
+│ └── example_es.ipynb   # Jupyter Notebook in Spanish – same examples, fully documented
 │
-├── requirements.txt           # Dependencies required to run the library
+├── images/              # Screenshots & GIFs used in the README
+│
+│
+├── requirements.txt     # Dependencies required to run the library
 └── README.md
 
 ```
@@ -226,7 +235,9 @@ print(order_result)
 
 ### 5. Real-Time Market Data
 
->[Realtime Demo](./images/realtime_demo.gif)  
+<br>
+
+![Realtime Demo](./images/realtime_demo.gif)  
 
 `RealTimeStreamer` opens a **persistent `WebSocket` connection** (DXFeed via Tastytrade) and runs on a **background thread**. You **poll** the latest snapshot from `stream.data` inside your own loop.  
 - **What you get:** a `dict` with the latest **`askPrice`** per symbol, e.g. `{"AAPL": 238.00, "MSFT": 510.05}`.  
@@ -268,7 +279,8 @@ historical = tt.get_historical(client, tickers, interval, vars, max_data)
 ```
 
 >**The output is a dict mapping each ticker to its DataFrame with the selected variables.**
->[Example](./images/historical.png)
+
+![Example](./images/historical.png)
 
 
 
