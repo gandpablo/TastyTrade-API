@@ -249,7 +249,30 @@ print(order_result)
 - `tickers` → list of symbols to subscribe (e.g., `["AAPL","TSLA"]`).  
 - `verbose` → `bool` (optional) for console logging.
 
-**The data variable is the core element you will work with.**
+**```The data variable is the core element you will work with.```**
+
+**Example order:**
+
+```python
+
+import time
+
+tickers = ['AAPL','TSLA','MSFT','AMZN','GOOGL']   
+
+stream = tt.RealTimeStreamer(client,tickers,verbose=False)
+
+stream.start()
+
+for _ in range(10):
+    data = stream.data
+    print(data)
+    time.sleep(1)
+    
+stream.stop()
+
+```
+
+This will only receive 10 interactions in 10 second (then the connections closes). You can also use a while True for unstoppable data sreaming, but the stream must stop somehow or the dx feed will expire after a few hours.
 
 ## 6. Historical Data
 
